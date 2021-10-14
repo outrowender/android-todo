@@ -3,4 +3,10 @@
     <string name="add_button_image_descriptor">Plus icon to add a new item in list</string>
     <string name="no_data_image_description">Android icon for an empty list</string>
     <string name="no_data_title">No data</string>
+
+    <string-array name="prioritiesEnum">
+        <item>High</item>
+        <item>Medium</item>
+        <item>Low</item>
+    </string-array>
 </resources>
