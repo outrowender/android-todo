@@ -1,53 +1,55 @@
 package com.outrowender.todo.fragments.list.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.outrowender.todo.R
+import com.outrowender.todo.data.models.Priority
 import com.outrowender.todo.data.models.TodoData
 import com.outrowender.todo.databinding.RowLayoutBinding
 
 class ListAdapter : RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
 
-    var dataList = emptyList<TodoData>()
+    private var dataList = emptyList<TodoData>()
 
-    class MyViewHolder(private val binding: RowLayoutBinding) : RecyclerView.ViewHolder(binding.root){
-
-        fun bind(toDoData: TodoData){
-            binding.toDoData = toDoData
-            binding.executePendingBindings()
-        }
-
-        companion object{
-            fun from(parent: ViewGroup): MyViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RowLayoutBinding.inflate(layoutInflater, parent, false)
-                return MyViewHolder(
-                    binding
-                )
-            }
-        }
-    }
+    class MyViewHolder (val binding: RowLayoutBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        return MyViewHolder.from(
-            parent
-        )
+        val binding = RowLayoutBinding.inflate(LayoutInflater.from(parent.context))
+        return MyViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        //set click event listener for each row
+        holder.binding.rowBackground.setOnClickListener {
+            holder.itemView.findNavController().navigate(R.id.action_listFragment_to_updateFragment)
+        }
+
+        //set data of the card
+        holder.binding.titleCardTxt.text = dataList[position].title
+        holder.binding.descriptionTxt.text = dataList[position].description
+        fun setCardWithColor(color: Int){
+            return holder.binding.priorityIndicator.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, color))
+        }
+
+        when(dataList[position].priority){
+            Priority.HIGH -> setCardWithColor(R.color.red)
+            Priority.MEDIUM -> setCardWithColor(R.color.yellow)
+            Priority.LOW -> setCardWithColor(R.color.green)
+        }
     }
 
     override fun getItemCount(): Int {
         return dataList.size
     }
 
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val currentItem = dataList[position]
-        holder.bind(currentItem)
-    }
-
-    fun setData(toDoData: List<TodoData>){
-    //    val toDoDiffUtil = ToDoDiffUtil(dataList, toDoData)
-    //    val toDoDiffResult = DiffUtil.calculateDiff(toDoDiffUtil)
-    //    this.dataList = toDoData
-    //    toDoDiffResult.dispatchUpdatesTo(this)
+    fun setData(todoData: List<TodoData>){
+        this.dataList = todoData
+        notifyDataSetChanged()
     }
 
 }
