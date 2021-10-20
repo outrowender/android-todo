@@ -46,5 +46,8 @@
             app:destination="@id/listFragment"
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left" />
+        <argument
+            android:name="currentItemParcelable"
+            app:argType="com.outrowender.todo.data.models.TodoData" />
     </fragment>
 </navigation>

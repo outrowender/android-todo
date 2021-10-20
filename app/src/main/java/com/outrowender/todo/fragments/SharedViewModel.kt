@@ -22,6 +22,14 @@ class SharedViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
+    fun parsePriority(priority: Priority): Int {
+        return when(priority){
+            Priority.HIGH -> 0
+            Priority.MEDIUM -> 1
+            Priority.LOW -> 2
+        }
+    }
+
     fun validate(mTitle: String, mPriority: String, mDescription: String): Boolean {
         //TODO: TextUtils validation and limit description to 300 chars
 
@@ -32,7 +40,7 @@ class SharedViewModel(application: Application): AndroidViewModel(application) {
         emptyDatabase.value = toDoData.isEmpty()
     }
 
-    val emptyDatabase: MutableLiveData<Boolean> = MutableLiveData(false)
+    val emptyDatabase: MutableLiveData<Boolean> = MutableLiveData(true)
 
     val listener: AdapterView.OnItemSelectedListener = object :
         AdapterView.OnItemSelectedListener{

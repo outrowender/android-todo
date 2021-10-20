@@ -11,6 +11,7 @@ import com.outrowender.todo.R
 import com.outrowender.todo.data.models.Priority
 import com.outrowender.todo.data.models.TodoData
 import com.outrowender.todo.databinding.RowLayoutBinding
+import com.outrowender.todo.fragments.list.ListFragmentDirections
 
 class ListAdapter : RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
 
@@ -26,7 +27,8 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         //set click event listener for each row
         holder.binding.rowBackground.setOnClickListener {
-            holder.itemView.findNavController().navigate(R.id.action_listFragment_to_updateFragment)
+            val action = ListFragmentDirections.actionListFragmentToUpdateFragment(dataList[position])
+            holder.itemView.findNavController().navigate(action)
         }
 
         //set data of the card
