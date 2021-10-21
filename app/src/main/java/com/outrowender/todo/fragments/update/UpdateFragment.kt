@@ -14,6 +14,7 @@ import com.outrowender.todo.data.viewModel.TodoViewModel
 import com.outrowender.todo.databinding.FragmentUpdateBinding
 import com.outrowender.todo.fragments.SharedViewModel
 
+
 class UpdateFragment : Fragment() {
     private var _binding: FragmentUpdateBinding? = null
     private val binding get() = _binding!!
@@ -29,10 +30,6 @@ class UpdateFragment : Fragment() {
         setHasOptionsMenu(true)
 
         binding.args = args
-
-        binding.noteTitleEditText.setText(args.currentItemParcelable.title)
-        binding.noteDescriptionEditText.setText(args.currentItemParcelable.description)
-        binding.addNoteSpinner.setSelection(mSharedViewModel.parsePriority(args.currentItemParcelable.priority))
 
         binding.addNoteSpinner.onItemSelectedListener = mSharedViewModel.listener
         return binding.root
@@ -55,10 +52,10 @@ class UpdateFragment : Fragment() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setNegativeButton("No"){ _, _ ->}
         builder.setPositiveButton("Yes"){ _, _ ->
-            mTodoViewModel.deleteItem(args.currentItemParcelable)
+            mTodoViewModel.deleteItem(args.currentUpdateItem)
             backToListing()
         }
-        builder.setTitle("Delete '${args.currentItemParcelable.title}'?")
+        builder.setTitle("Delete '${args.currentUpdateItem.title}'?")
         builder.setMessage("Are you sure you want to remove this?")
         builder.create().show()
     }
@@ -73,7 +70,7 @@ class UpdateFragment : Fragment() {
         if (!valid) return
 
         val dataUpdate = TodoData(
-            args.currentItemParcelable.id,
+            args.currentUpdateItem.id,
             mTitle,
             mSharedViewModel.parsePriority(mPriority),
             mDescription
@@ -88,6 +85,11 @@ class UpdateFragment : Fragment() {
 
     private fun backToListing(){
         findNavController().navigate(R.id.action_updateFragment_to_listFragment)
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
 }

@@ -47,7 +47,7 @@
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left" />
         <argument
-            android:name="currentItemParcelable"
+            android:name="currentUpdateItem"
             app:argType="com.outrowender.todo.data.models.TodoData" />
     </fragment>
 </navigation>
