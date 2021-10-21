@@ -12,6 +12,7 @@ import com.outrowender.todo.data.viewModel.TodoViewModel
 import com.outrowender.todo.databinding.FragmentListBinding
 import com.outrowender.todo.fragments.SharedViewModel
 import com.outrowender.todo.fragments.list.adapter.ListAdapter
+import com.outrowender.todo.fragments.update.UpdateFragmentArgs
 
 class ListFragment : Fragment() {
 
@@ -26,31 +27,24 @@ class ListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentListBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.mSharedViewModel = mSharedViewModel
 
-        binding.listRecyclerView.adapter = adapter
-        binding.listRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        setupRecyclerView()
 
         mTodoViewModel.getAllData.observe(viewLifecycleOwner, Observer {
             mSharedViewModel.checkIfDatabaseEmpty(it)
             adapter.setData(it)
         })
 
-        mSharedViewModel.emptyDatabase.observe(viewLifecycleOwner, Observer {
-            updateDatabaseStatusView(it)
-        })
-
-        binding.floatingActionButton.setOnClickListener {
-            findNavController().navigate(R.id.action_listFragment_to_addFragment)
-        }
-
         setHasOptionsMenu(true)
 
         return binding.root
     }
 
-    private fun updateDatabaseStatusView(empty: Boolean) {
-        binding.noDataImageView.visibility = if (empty) View.VISIBLE else View.INVISIBLE
-        binding.noDataTextView.visibility = if (empty) View.VISIBLE else View.INVISIBLE
+    private fun setupRecyclerView() {
+        binding.listRecyclerView.adapter = adapter
+        binding.listRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -59,10 +53,15 @@ class ListFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.menu_delete_all){
+        if (item.itemId == R.id.menu_delete_all) {
             mTodoViewModel.deleteAll()
         }
         return super.onOptionsItemSelected(item)
     }
 
+    //important AF
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
 }

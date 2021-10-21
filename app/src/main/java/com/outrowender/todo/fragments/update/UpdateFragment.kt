@@ -9,7 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.outrowender.todo.R
-import com.outrowender.todo.data.models.Priority
 import com.outrowender.todo.data.models.TodoData
 import com.outrowender.todo.data.viewModel.TodoViewModel
 import com.outrowender.todo.databinding.FragmentUpdateBinding
@@ -22,13 +21,14 @@ class UpdateFragment : Fragment() {
     private val mTodoViewModel: TodoViewModel by viewModels()
     private val args by navArgs<UpdateFragmentArgs>()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentUpdateBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
+
+        binding.args = args
 
         binding.noteTitleEditText.setText(args.currentItemParcelable.title)
         binding.noteDescriptionEditText.setText(args.currentItemParcelable.description)
