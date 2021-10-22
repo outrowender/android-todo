@@ -14,6 +14,8 @@ import com.outrowender.todo.data.viewModel.TodoViewModel
 import com.outrowender.todo.databinding.FragmentListBinding
 import com.outrowender.todo.fragments.SharedViewModel
 import com.outrowender.todo.fragments.list.adapter.ListAdapter
+import com.outrowender.todo.fragments.utils.hideKeyboard
+import com.outrowender.todo.fragments.utils.observeOnce
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 
 class ListFragment : Fragment(), SearchView.OnQueryTextListener {
@@ -41,17 +43,19 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
 
         setHasOptionsMenu(true)
 
+        hideKeyboard(requireActivity())
+
         return binding.root
     }
 
     private fun setupRecyclerView() {
-        binding.listRecyclerView.adapter = adapter
-        binding.listRecyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        binding.listRecyclerView.itemAnimator = SlideInUpAnimator().apply {
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        binding.recyclerView.itemAnimator = SlideInUpAnimator().apply {
             addDuration = 300
         }
 
-        swipeToDelete(binding.listRecyclerView)
+        swipeToDelete(binding.recyclerView)
     }
 
     private fun swipeToDelete(recyclerView: RecyclerView) {
@@ -115,7 +119,7 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
     private fun searchThroughDatabase(query: String) {
         val searchQuery = "%$query%"
 
-        mTodoViewModel.searchDatabase(searchQuery).observe(viewLifecycleOwner) { list ->
+        mTodoViewModel.searchDatabase(searchQuery).observeOnce(viewLifecycleOwner) { list ->
             list?.let {
                 Log.d("ListFragment", "searchThroughDatabase")
                 adapter.setData(it)
